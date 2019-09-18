@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+<html lang='ja'>
+	<head>
+		<meta charset='utf-8' />
+		<meta name='viewport' content='width=device-width,initial-scale=1' />
+		<title>左右反転するやつ</title>
+		<script src='https://code.jquery.com/jquery-3.1.0.min.js'></script>
+		<script src='https://cdn.rawgit.com/eligrey/FileSaver.js/master/FileSaver.min.js'></script>
+		<script>
+$(function(){
+	$('#file').change(function(){
+		var image = new Image();
+		var reader = new FileReader();
+		var infile = this.files[0];
+
+		reader.onload = function(evt){
+			image.onload = function(){
+				var buf = $('<canvas>');
+				buf.attr({
+					width: image.width,
+					height: image.height
+				}).get(0).getContext('2d').drawImage(image, 0, 0);
+				var imgdata = buf.get(0).getContext('2d').getImageData(0, 0, image.width, image.height);
+				console.log(imgdata);
+				for(var i = 0; i < image.width * image.height; ++i){
+					if(i % image.width >= image.width / 2) continue;
+					var dst = i % image.width;
+					var dst = i - 2 * dst + image.width;
+					var tmp = imgdata.data[i * 4];
+					imgdata.data[i * 4] = imgdata.data[dst * 4];
+					imgdata.data[dst * 4] = tmp;
+
+					tmp = imgdata.data[i * 4 + 1];
+					imgdata.data[i * 4 + 1] = imgdata.data[dst * 4 + 1];
+					imgdata.data[dst * 4 + 1] = tmp;
+
+					tmp = imgdata.data[i * 4 + 2];
+					imgdata.data[i * 4 + 2] = imgdata.data[dst * 4 + 2];
+					imgdata.data[dst * 4 + 2] = tmp;
+				}
+				$('#canvas').attr({
+					width: image.width,
+					height: image.height
+				}).get(0).getContext('2d').putImageData(imgdata, 0, 0);
+				$('#canvas').get(0).toBlob(function(blob){
+					saveAs(blob, infile.name.replace(/\.[^.]+/, '').replace(/$/, '-lrinvert.png'));
+				})
+			}
+			image.src = evt.target.result;
+		}
+
+		reader.readAsDataURL(infile);
+	});
+});
+		</script>
+	</head>
+	<body>
+		<div><input id='file' type='file' accept='image/*' /></div>
+		<div><canvas id='canvas'></canvas></div>
+
+		<h1>なにこれ?</h1>
+		<ul>
+			<li>左右反転。</li>
+			<li>サーバに画像はアップロードしていません。すべてブラウザ上で完結します。嘘だと思うなら、スマートフォンでこのページを開いた状態で機内モードにして試してください。</li>
+		<ul>
+	</body>
+</html>

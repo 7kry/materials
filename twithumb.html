@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang='ja'>
+	<head>
+		<meta charset='utf-8' />
+		<meta name='viewport' content='width=device-width,initial-scale=1' />
+		<title>Twitterのサムネのアス比で真ん中ぶち抜くとどうなるかみてみるやつ</title>
+		<script src='https://code.jquery.com/jquery-3.1.0.min.js'></script>
+		<script src='https://cdn.rawgit.com/eligrey/FileSaver.js/master/FileSaver.min.js'></script>
+		<script>
+$(function(){
+	$('#file').change(function(){
+		var image = new Image();
+		var reader = new FileReader();
+		var infile = this.files[0];
+
+		reader.onload = function(evt){
+			image.onload = function(){
+				var w = 0, h = 0;
+				if(image.width * 9 > image.height * 16){
+					h = image.height;
+					w = Math.round(h / 9 * 16);
+					x = (image.width - w) / 2;
+					y = 0;
+				}else{
+					w = image.width;
+					h = Math.round(w / 16 * 9);
+					x = 0;
+					y = (image.height - h) / 2;
+				}
+				$('#canvas').attr({
+					width: 480,
+					height: 270,
+				}).get(0).getContext('2d')
+					.drawImage(image, x, y, w, h, 0, 0, 480, 270);
+				$('#message').text('元画像の (' + x.toString() + ', ' + y.toString() + ') から ' + w.toString() + ' x ' + h + ' を切り取り');
+			}
+			image.src = evt.target.result;
+		}
+
+		reader.readAsDataURL(infile);
+	});
+});
+		</script>
+	</head>
+	<body>
+		<div><input id='file' type='file' accept='image/*' /></div>
+		<div><canvas id='canvas'></canvas></div>
+		<div id='message'></div>
+		<h1>なにこれ?</h1>
+		<ul>
+			<li><a href='https://twitter.com/kazuharukina/status/814138604737830913' target='_blank'>アローラのすがた</a></li>
+			<li>じゃなくて、Twitterでサムネにしたらどうなるかなってのを試しに見てみるツールです。</li>
+			<li>サーバに画像はアップロードしていません。すべてブラウザ上で完結します。スマートフォンでこのページを開いた状態で機内モードに切り替えても動くのはそういうことです。</li>
+		<ul>
+	</body>
+</html>
