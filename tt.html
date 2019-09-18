@@ -8,16 +8,29 @@
 			body, textarea {
 				font-family: "MigMix 1M", monospace;
 				src: url('./migmix-1m-regular.woff2');
-				text-align: center;
 			}
 			textarea {
-				width: 95vw;
-				height: 95vh;
-				text-align: left;
+				width: 40vw;
+				height: 20vh;
 			}
 		</style>
+		<script src='https://code.jquery.com/jquery-3.4.1.min.js'></script>
+		<script>
+			$(function(){
+				$("input").click(function(){
+					var text = $("textarea").val();
+					$("body").empty().text(text);;
+				});
+			});
+		</script>
 	</head>
 	<body>
-		<textarea></textarea>
+		<form action=''>
+			<textarea></textarea>
+			<br/>
+			<input type='button' value='確定' />
+			<br/>
+			あいうえお
+		</form>
 	</body>
 </html>
