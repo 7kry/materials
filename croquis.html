@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang='ja'>
+<head>
+<meta charset='UTF-8' />
+<meta name="viewport" content="width=device-width initial-scale=1, user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<title>Croquis</title>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src='https://code.jquery.com/ui/1.12.1/jquery-ui.min.js'></script>
+<script src="https://rawgit.com/Leimi/drawingboard.js/master/dist/drawingboard.min.js"></script>
+<script src="https://rawgit.com/Stuk/jszip/master/dist/jszip.min.js"></script>
+<script src="https://rawgit.com/eligrey/FileSaver.js/master/FileSaver.min.js"></script>
+<link rel='stylesheet' href='https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css' />
+<style>
+html {
+	height: 100%;
+}
+body {
+	height: 100%;
+	margin: 0;
+}
+#the-board {
+	height: 89%;
+	width: 100%;
+	border-top: 1px solid;
+	border-bottom: 1px solid;
+}
+#control {
+	height: 10%;
+	margin: 0;
+}
+#control button {
+	height: 100%;
+}
+#log {
+	display: none;
+}
+#log img {
+}
+</style>
+<script>
+$(function(){
+	$('#new-button').button();
+	$('#log-button').button();
+	$('#new-button').on('click touchend', function(){
+		var canvas = $('#the-board canvas').get(0);
+		var ctx = canvas.getContext('2d');
+		$('<img>')
+			.attr('src', canvas.toDataURL())
+			.attr('data-timestamp', (new Date()).toISOString())
+			.prependTo('#log');
+		ctx.fillRect();
+	});
+	$('#log-button').on('click touchend', function(){
+		//$(window).scrollTop($('#log').offset().top);
+		$('#new-button').click();
+		var zip = new JSZip();
+		$('#log img').map(function(){
+			zip.file(
+				$(this).attr('data-timestamp') + '.png', $(this).attr('src').replace(/^.*,/, ''), {base64: true}
+			);
+		});
+		zip.generateAsync({type: 'blob'})
+			.then(function(cont){
+				saveAs(cont, 'croquis-' + (new Date()).toISOString() + '.zip')
+			});
+		$('#log img').remove();
+	});
+	new DrawingBoard.Board('the-board', {
+		controls: false,
+		webStorage: false
+	});
+	var canvas = $('#the-board canvas').get(0);
+	var ctx = canvas.getContext('2d');
+	ctx.fillStyle = 'rgb(255, 255, 255)';
+	ctx.fillRect();
+	document.addEventListener("touchmove", function(evt) {
+		//if($(window).scrollTop() < 1){
+		//	evt.preventDefault();
+		//}
+		evt.preventDefault();
+	}, false);
+})
+</script>
+</head>
+<body>
+	<div id='control'>
+		<button id='new-button'>NEW</button>
+		<button id='log-button'>LOG</button>
+	</div>
+	<div class='board' id='the-board'></div>
+	<div id='log'>
+	</div>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang='ja'>
+<head>
+<meta charset='utf-8' />
+<title>dakuten</title>
+<script src='https://code.jquery.com/jquery-2.1.1.min.js'></script>
+<script>
+$(function(){
+  $("#convert").click(function(){
+    $("#result").text($("#original").val().replace(/(.)(?=.|$)/g, "$1\u3099"));
+  });
+});
+</script>
+</head>
+<body>
+<textarea id='original'></textarea>
+<button id='convert'>変換</button>
+<div id='result'></div>
+</body>
+</html>

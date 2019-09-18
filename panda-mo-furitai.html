@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang='ja'>
+	<head>
+		<meta charset='utf-8' />
+		<title>ぱんだもふりたい</title>
+		<script src='https://code.jquery.com/jquery-3.3.1.min.js'></script>
+		<script>
+var spawn_falling_panda = function(){
+	var baby_panda = $("<img src='panda.svg' alt='panda'>")
+		.css({
+			position: 'absolute'
+		})
+		.appendTo(document.body);
+	baby_panda.offset({
+		left: Math.random() * ($(window).width() - baby_panda.width()),
+		top: - baby_panda.height() / 2
+	});
+	baby_panda.animate({
+		top: $(window).height()
+	}, {
+		duration: 3000,
+		complete: function(){ baby_panda.remove() }
+	});
+}
+$(function(){
+	setInterval(spawn_falling_panda, 500);
+});
+		</script>
+	</head>
+	<body>
+	</body>
+</html>
