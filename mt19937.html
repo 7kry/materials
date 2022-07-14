@@ -208,17 +208,17 @@ MersenneTwister.prototype.next = function() {
 		<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 		<script>
 $(function(){
+	var mt = new MersenneTwister();
 	$("#gen").click(function(){
 		var min = parseInt($("#min").val());
 		var max = parseInt($("#max").val());
-		var mt = new MersenneTwister();
-		$("#res").val(mt.nextInt(min, max + 1));
+		$("#res").html("" + mt.nextInt(min, max + 1) + "<br/>" + $("#res").html());
 	});
 });
 		</script>
 	</head>
 	<body>
 		<input type="text" value="1" id="min" /> - <input type="text" value="6" id="max" /> <input type="submit" value="generate" id="gen" /><br />
-		<input type="text" id="res" />
+		<div id="res"></div>
 	</body>
 </html>
