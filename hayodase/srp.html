@@ -13,7 +13,8 @@
 				var now = new Date();
 				var text = now.getFullYear() + '/' + zeroPadding(now.getMonth() + 1, 2) + '/' + zeroPadding(now.getDate(), 2) + ' ' + zeroPadding(now.getHours(), 2) + ':' + zeroPadding(now.getMinutes(), 2) + ':' + zeroPadding(now.getSeconds(), 2);
 				$('#result').text(text).attr({'data-text': text});
-				$('#copy-button').css({display: 'block'});
+				$('#phase1').css({display: 'none'});
+				$('#phase2').css({display: 'block'});
 			});
 			$('#copy-button').click(function(){
 				navigator.clipboard.writeText($('#result').attr('data-text'));
@@ -22,7 +23,11 @@
 	</script>
 </head>
 <body>
-	<input id='hayodase' type='button' value='はよだせ' />
-	<div id='result'></div><input id='copy-button' type='button' value='コピー!' style='display: none' />
+	<div id='phase1'>
+		<input id='hayodase' type='button' value='はよだせ' />
+	</div>
+	<div id='phase2' style='display: none'>
+		<div id='result'></div><input id='copy-button' type='button' value='コピー!' />
+	</div>
 </body>
 </html>
