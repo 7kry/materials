@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang='ja'>
+<head>
+	<meta charset='utf-8' />
+	<title>はよだせ</title>
+	<script src='https://code.jquery.com/jquery-3.7.1.min.js'></script>
+	<script>
+		function zeroPadding(num, len){
+				return (Array(len).join('0') + num).slice(-len);
+		}
+		$(function(){
+			$('#hayodase').click(function(){
+				var now = new Date();
+				var text = now.getFullYear() + '/' + zeroPadding(now.getMonth() + 1, 2) + '/' + zeroPadding(now.getDate(), 2) + ' ' + zeroPadding(now.getHours(), 2) + ':' + zeroPadding(now.getMinutes(), 2) + ':' + zeroPadding(now.getSeconds(), 2);
+				$('#result').text(text).attr({'data-text': text});
+				$('#copy-button').css({display: 'block'});
+			});
+			$('#copy-button').click(function(){
+				navigator.clipboard.writeText($('#result').attr('data-text'));
+			});
+		});
+	</script>
+</head>
+<body>
+	<input id='hayodase' type='button' value='はよだせ' />
+	<div id='result'></div><input id='copy-button' type='button' value='コピー!' style='display: none' />
+</body>
+</html>
